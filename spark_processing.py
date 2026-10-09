@@ -3,15 +3,15 @@ from pyspark.sql import functions as F
 
 
 def get_spark_session(app_name: str = "NumbaParquetSparkBench") -> SparkSession:
-    """
-    Initializes a local PySpark session.
-    """
-    return (
+    spark = (
         SparkSession.builder.appName(app_name)
         .config("spark.master", "local[*]")
         .config("spark.driver.memory", "2g")
         .getOrCreate()
     )
+    # Mute JVM logger output
+    spark.sparkContext.setLogLevel("ERROR")
+    return spark
 
 
 def process_with_spark(spark: SparkSession, parquet_path: str):
